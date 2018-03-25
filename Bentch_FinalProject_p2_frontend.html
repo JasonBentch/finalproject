@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div>3/25 VERSION<br>
+      Availiable Songs:
+      <form onsubmit="populate()" name="songName" accept-charset=utf-8>
+        <select name="Songs">
+          <option value="1">NSFW</option>
+          <option value="2">Falling Stars</option>
+          <option value="3">Wrong (Oseas Kline Remix)</option>
+        </select>
+        <br></br>
+        <input type="submit" value="Submit">
+      </form>
+    </div>
+    <div id="nsfwDiv"></div>
+    <div id="fallingStarsDiv"></div>
+    <div id="wrongDiv"></div>
+  </body>
+  <script>
+
+  function populate(){
+    let form = document.forms["songName"]["Songs"].value;
+//    newScript.src = 'https://itunes.apple.com/search?term=' + form + '&entity=song&limit=5&callback=sqlResults&format=json';
+	}
+
+  function sqlResults(json){
+    let divOne = document.getElementById("nsfwDiv"),
+        divTwo = document.getElementById("fallingStarsDiv"),
+        divThree = document.getElementById("wrongDiv");
+
+    function millisToMinutesAndSeconds(millis) {
+      let minutes = Math.floor(millis / 60000),
+          seconds = ((millis % 60000) / 1000).toFixed(0);
+      return (seconds == 60 ? (minutes+1) + ":00" : minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
+    }
+
+    divOne.innerHTML = "<img src= '" + json.results[0].artworkUrl100 + "' /> " + json.results[0].trackName + " || Duration: " + millisToMinutesAndSeconds(json.results[0].trackTimeMillis) + " || Album: " + json.results[0].collectionName;
+    divTwo.innerHTML = "<img src= '" + json.results[1].artworkUrl100 + "' /> " + json.results[1].trackName + " || Duration: " + millisToMinutesAndSeconds(json.results[1].trackTimeMillis) + " || Album: " + json.results[1].collectionName;
+    divThree.innerHTML = "<img src= '" + json.results[2].artworkUrl100 + "' /> " + json.results[2].trackName + " || Duration: " + millisToMinutesAndSeconds(json.results[2].trackTimeMillis) + " || Album: " + json.results[2].collectionName;
+  }
+  </script>
+</html>
