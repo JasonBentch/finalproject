@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <div>4/1 VERSION<br>Oseas Kline's Remix Machine! <br>Remix "NSFW" in real time using the faders, mutes, and solos - Press "Play/Stop" or <kbd>Spacebar</kbd> to get started! <kbd>P</kbd> is pause!</div>
+  <div>Use <kbd>A</kbd> through <kbd>K</kbd> to mute tracks!</div>
+  <div>Use <kbd>Z</kbd> through <kbd>,</kbd> to solo tracks!</div>
+  <div>Or click on one of the songs below try a different remix</div>
+  <div id="first"></div>
+  <div id="second"></div>
+  <script src="/Users/JasonBentch/node_modules/howler/dist/howler.js"></script>
+  <script src="http://www.openjs.com/scripts/events/keyboard_shortcuts/shortcut.js"></script>
+  <p>
+    <button id="playStop" type="button" onclick="playStop()">Play/Stop</button>
+    <button type="button" onclick="pause()">Pause</button>
+  </p>
+  <p>
+
+  </p>
+  <div id="faderDiv"></div>
+  <div id="muteDiv"></div>
+  <div id="soloDiv"></div>
+
+  <script>
+    let loadCount = 0,
+        loaded = false,
+        soloBoo = false;
+
+    let stems = [
+      new Howl({
+        src: ['https://www.dropbox.com/s/2gbivftt8zlq7he/NSFW_DRUM_STEM.wav?dl=1'],
+        preload: true,
+        autoplay: false,
+        loop: true,
+        onload: function() {
+          console.log('Drums finished loading!');
+          loadCount++;
+          loadCheck();
+        },
+        onloaderror: function() {
+          console.log('Error loading drums!');
+        }
+      }),
+      new Howl({
+        src: ['https://www.dropbox.com/s/3xf833ettd2gmp7/NSFW_BASS_STEM.wav?dl=1'],
+        preload: true,
+        autoplay: false,
+        loop: true,
+        onload: function() {
+          console.log('Bass finished loading!');
+          loadCount++;
+          loadCheck();
+        },
+        onloaderror: function() {
+          console.log('Error loading bass!');
+        }
+      }),
+      new Howl({
+        src: ['https://www.dropbox.com/s/3xklfkd8arpsyzk/NSFW_SYNTH_STEM.wav?dl=1'],
+        preload: true,
+        autoplay: false,
+        loop: true,
+        onload: function() {
+          console.log('Synths finished loading!');
+          loadCount++;
+          loadCheck();
+        },
+        onloaderror: function() {
+          console.log('Error loading synths!');
+        }
+      }),
+      new Howl({
+        src: ['https://www.dropbox.com/s/7x3c4w90pvz6h5h/NSFW_VOCAL_STEM.wav?dl=1'],
+        preload: true,
+        autoplay: false,
+        loop: true,
+        onload: function() {
+          console.log('Vocals finished loading!');
+          loadCount++;
+          loadCheck();
+        },
+        onloaderror: function() {
+          console.log('Error loading vocals!');
+        }
+      })];
+
+    for (let stem in stems) {
+      let volFade = document.createElement("input");
+      volFade.setAttribute("type", "range");
+      volFade.setAttribute("oninput", "classVolume(" + stem + ")");
+      volFade.setAttribute("min", "0");
+      volFade.setAttribute("max", "100");
+      volFade.setAttribute("value", "100");
+      volFade.setAttribute("step", "1");
+      volFade.setAttribute("class", "vertical");
+      volFade.setAttribute("orient", "vertical");
+      volFade.setAttribute("id", "fader" + stem);
+      document.getElementById("faderDiv").appendChild(volFade);
+      let muteBtn = document.createElement("button");
+      muteBtn.setAttribute("type", "button");
+      muteBtn.setAttribute("onclick", "classMute(" + stem + ")");
+      let m = document.createTextNode("M");
+      muteBtn.appendChild(m);
+      document.getElementById("muteDiv").appendChild(muteBtn);
+      let soloBtn = document.createElement("button");
+      soloBtn.setAttribute("type", "button");
+      soloBtn.setAttribute("onclick", "classSolo(" + stem + ")");
+      let s = document.createTextNode("S");
+      soloBtn.appendChild(s);
+      document.getElementById("soloDiv").appendChild(soloBtn);
+    }
+
+    let faders = document.getElementsByClassName("vertical");
+    for (let v = 0; v < faders.length; v++) {
+      document.getElementById("fader" + v).value = 100;
+    }
+
+    function loadCheck() {
+      if (loadCount >= stems.length) {
+        loaded = true;
+        console.log("All files loaded!");
+      }
+    }
+
+    document.getElementById("playStop").onmouseover = function() {
+      if (loaded == false) {
+        alert("Files have not finished loading!");
+      }
+    }
+
+    function playStop() {
+      if (stems[0].playing() == true) {
+        for (let stem in stems) {
+          stems[stem].stop();
+        }
+      } else {
+        for (let stem in stems) {
+          stems[stem].play();
+        }
+      }
+    }
+
+    function pause() {
+      if (stems[0].playing() == true){
+        for (let stem in stems){
+          stems[stem].pause();
+        }
+      } else {
+        for (let stem in stems){
+          stems[stem].play();
+        }
+      }
+    }
+
+    function classMute(i) {
+      stems[i].mute(! stems[i].mute());
+    }
+
+    function classSolo(i) {
+      if (soloBoo == false){
+        stems[i].mute(false);
+        for (let stem in stems){
+          if (stem != i){
+            stems[stem].mute(true);
+          }
+        }
+        soloBoo = true;
+      } else {
+        for (let stem in stems){
+          stems[stem].mute(false);
+        }
+        soloBoo = false;
+      }
+    }
+
+    function classVolume(i) {
+      stems[i].volume(document.getElementById("fader" + i).value / 100);
+    }
+
+    shortcut.add("Space", function() {
+      if (loaded == false) {
+        alert("Files have not finished loading!");
+      } else {
+        playStop();
+      }
+    });
+
+    shortcut.add("p", function() {
+      pause();
+    });
+
+    shortcut.add("a", function() {
+      classMute(0);
+    });
+
+    shortcut.add("s", function() {
+      classMute(1);
+    });
+
+    shortcut.add("d", function() {
+      classMute(2);
+    });
+
+    shortcut.add("f", function() {
+      classMute(3);
+    });
+
+    shortcut.add("g", function() {
+      classMute(4);
+    });
+
+    shortcut.add("h", function() {
+      classMute(5);
+    });
+
+    shortcut.add("j", function() {
+      classMute(6);
+    });
+
+    shortcut.add("k", function() {
+      classMute(7);
+    });
+
+    shortcut.add("z", function() {
+      classSolo(0);
+    });
+
+    shortcut.add("x", function() {
+      classSolo(1);
+    });
+
+    shortcut.add("c", function() {
+      classSolo(2);
+    });
+
+    shortcut.add("v", function() {
+      classSolo(3);
+    });
+
+    shortcut.add("b", function() {
+      classSolo(4);
+    });
+
+    shortcut.add("n", function() {
+      classSolo(5);
+    });
+
+    shortcut.add("m", function() {
+      classSolo(6);
+    });
+
+    shortcut.add(",", function() {
+      classSolo(7);
+    });
+
+    let newScript = document.createElement("script");
+    newScript.id = "itunesScript";
+    newScript.src = 'https://itunes.apple.com/search?term=' + "Oseas Kline" + '&entity=song&limit=5&callback=itunesResults&format=json';
+    document.body.appendChild(newScript);
+
+    function itunesResults(json){
+      let divOne = document.getElementById("first"),
+          divTwo = document.getElementById("second");
+
+      function millisToMinutesAndSeconds(millis) {
+        let minutes = Math.floor(millis / 60000);
+        let seconds = ((millis % 60000) / 1000).toFixed(0);
+        return (seconds == 60 ? (minutes+1) + ":00" : minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
+      }
+
+      divOne.innerHTML = "<img src= '" + json.results[0].artworkUrl100 + "' id='fs'/> " + "<br>" + json.results[0].trackName + "<br>" + " Duration: " + millisToMinutesAndSeconds(json.results[0].trackTimeMillis) + "<br>" + " Album: " + json.results[0].collectionName;
+      divTwo.innerHTML = "<img src= '" + json.results[1].artworkUrl100 + "' id='wrong'/> " + "<br>" + json.results[1].trackName + "<br>" + " Duration: " + millisToMinutesAndSeconds(json.results[1].trackTimeMillis) + "<br>" + " Album: " + json.results[1].collectionName;
+    }
+
+    document.getElementById("first").addEventListener('click', () => {
+      if (stems[0].playing() == true) {
+        for (let stem in stems) {
+          stems[stem].stop();
+        }
+      }
+      for (let stem in stems) {
+        stems[stem].unload();
+      }
+      loadCount = 0;
+      loaded = false;
+
+      stems = [
+        new Howl({
+          src: ['https://www.dropbox.com/s/c4dvfqba4m2c9hs/Falling_Stars_DRUMS_STEM.wav?dl=1'],
+          preload: true,
+          autoplay: false,
+          loop: true,
+          onload: function() {
+            console.log('Drums finished loading!');
+            loadCount++;
+            loadCheck();
+          },
+          onloaderror: function() {
+            console.log('Error loading drums!');
+          }
+        }),
+        new Howl({
+          src: ['https://www.dropbox.com/s/8b3lcnx7khw87sw/Falling_Stars_BASS_STEM.wav?dl=1'],
+          preload: true,
+          autoplay: false,
+          loop: true,
+          onload: function() {
+            console.log('Bass finished loading!');
+            loadCount++;
+            loadCheck();
+          },
+          onloaderror: function() {
+            console.log('Error loading bass!');
+          }
+        }),
+        new Howl({
+          src: ['https://www.dropbox.com/s/swprzum2pqoxbie/Falling_Stars_SYNTHS_STEM.wav?dl=1'],
+          preload: true,
+          autoplay: false,
+          loop: true,
+          onload: function() {
+            console.log('Synths finished loading!');
+            loadCount++;
+            loadCheck();
+          },
+          onloaderror: function() {
+            console.log('Error loading synths!');
+          }
+        }),
+        new Howl({
+          src: ['https://www.dropbox.com/s/j5g9q9qhm2pu3gm/Falling_Stars_LEADS_STEM.wav?dl=1'],
+          preload: true,
+          autoplay: false,
+          loop: true,
+          onload: function() {
+            console.log('Vocals finished loading!');
+            loadCount++;
+            loadCheck();
+          },
+          onloaderror: function() {
+            console.log('Error loading vocals!');
+          }
+        })];
+    });
+
+    document.getElementById("second").addEventListener('click', () => {
+      alert("Coming soon!");
+    });
+  </script>
+<style>
+input.vertical {
+	-webkit-appearance: slider-vertical;
+	writing-mode: bt-lr;
+}
+input.horizontal {
+	-webkit-appearance: slider-horizontal;
+	writing-mode: bt-lr;
+}
+kbd {
+  border-radius: 3px;
+  padding: 1px 2px 0;
+  border: 1px solid black;
+}
+</style>
+</body>
+</html>
