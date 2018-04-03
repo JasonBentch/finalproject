@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <title>Concert_db</title>
+  </head>
+  <body id="body">
+
+    <div><a href= "http://localhost:3000/add_artist"><strong>Add Artist</strong></a>
+      <a href= "http://localhost:3000/add_show"><strong>Add Show</strong></a>
+    </div>
+
+
+    <form name="search_for_shows" action="/show_search.html" method="post">
+      <label for="select_artist">Search for shows by artist</label>
+      <br>
+      <select name="select_artist" class="custom_select">
+        <option id="@@artist_list_1@@"></option>
+      </select>
+      <input type="submit" name="submit_search" value="Search">
+    </form>
+
+  </body>
+  <style>
+    body {
+      background: #313e50;
+      font-size: 1.25vw;
+      font-family: arial, sans-serif;
+      text-align: center;
+      padding: 18vw;
+    }
+
+    input {
+      background-color: white;
+      color: #5c6672;
+      border: 2px solid #5c6672;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      margin: 20px;
+      font-size: 1.25vw;
+      font-family: arial, sans-serif;
+      font-weight: bold;
+    }
+
+    label {
+      color: white;
+      font-size: 1.5vw;
+    }
+
+    a:link, a:visited {
+      background-color: white;
+      color: #5c6672;
+      border: 2px solid #5c6672;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      margin: 20px;
+    }
+
+    a:hover, a:active {
+      background-color: #5c6672;
+      color: white;
+    }
+
+    select {
+      width: 14vw;
+      position: relative;
+      background-color: #5c6672;
+      color: white;
+      padding: 8px 16px;
+      border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+      cursor: pointer;
+    }
+  </style>
+</html>

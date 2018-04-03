@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <title>Add Show</title>
+  </head>
+  <body id="body">
+
+    <form name="add_show" action="/show_added" method="post">
+      <label for="select_artist" style="padding:20px">Select Artist</label>
+      <select name="select_artist">
+        <option id="@@artist_list_2@@"></option>
+      </select><br>
+      <label for="venue">Venue</label>
+      <input type="text" name="venue" value="" required><br>
+      <label for="city">City</label>
+      <input type="text" name="city" value="" required><br>
+      <label for="state">State</label>
+      <input type="text" name="state" value="" required><br>
+      <label for="show_date">Show Date</label>
+      <input type="date" name="show_date" value="" required><br>
+      <label for="show_time">Show Time</label>
+      <input type="text" name="show_time" value="" required><br>
+      <label for="price">Price</label>
+      <input type="text" name="price" value="" required><br>
+      <input type="submit" name="submit_show" value="Submit">
+    </form>
+
+
+  </body>
+  <style>
+    body {
+      background: #313e50;
+      font-size: 1.25vw;
+      font-family: arial, sans-serif;
+      text-align: center;
+      padding: 5vw;
+    }
+
+    input {
+      background-color: white;
+      color: #5c6672;
+      border: 2px solid #5c6672;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      margin: 20px;
+      font-size: 1.25vw;
+      font-family: arial, sans-serif;
+      font-weight: bold;
+    }
+
+    label {
+      color: white;
+      font-size: 1.5vw;
+    }
+
+    a:link, a:visited {
+      background-color: white;
+      color: #5c6672;
+      border: 2px solid #5c6672;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      margin: 20px;
+    }
+
+    a:hover, a:active {
+      background-color: #5c6672;
+      color: white;
+    }
+
+    select {
+      width: 14vw;
+      position: relative;
+      background-color: #5c6672;
+      color: white;
+      padding: 8px 16px;
+      border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+      cursor: pointer;
+    }
+  </style>
+</html>
